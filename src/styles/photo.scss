@@ -1,0 +1,12 @@
+.image{
+    width: 80px;
+    height: auto;
+    object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+}
+.largeImg{
+    max-width: 800px;
+    height: auto;
+}
+.title{
+font-size: 20px;
+}
