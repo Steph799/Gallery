@@ -1,1 +1,1 @@
-export const maxDescriptionLength= 100
+export const maxDescriptionLength= 150

@@ -1,15 +1,16 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
-import { Card, CardContent } from '@mui/material';
+import { Card, CardContent, CardContentProps, styled } from '@mui/material';
 import Photo, { PhotoProps } from './Photo';
-//import HighlightedCode from 'docs/src/modules/components/HighlightedCode';
 
 export default function CardsGrid() {
-    // const [spacing, setSpacing] = React.useState(2);
 
-    // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setSpacing(Number((event.target as HTMLInputElement).value));
-    // };
+    const CardContentImp = styled(CardContent)<CardContentProps>(() => ({
+        padding:10,
+        '&:last-child': {
+            paddingBottom: '10px', // Add 10px of padding to the last child
+          }
+    }));
 
     const photos: PhotoProps[] = [{
         "title": "Apply future response she reduce decide",
@@ -67,9 +68,9 @@ export default function CardsGrid() {
                                     backgroundColor: (theme) =>
                                         theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
                                 }}
-                            ><CardContent>
+                            ><CardContentImp >
                                     <Photo {...photo} />
-                                </CardContent>
+                                </CardContentImp>
                             </Card>
                         </Grid>
                     ))}

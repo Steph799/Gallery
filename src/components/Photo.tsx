@@ -31,14 +31,17 @@ const openDialog = (element: 'image'| 'description')=>{
         <>
             <article>
                 <h3 className='title'>{title}</h3>
-                <span>{user}</span>
-                <span>{id}</span>
-                <p>{description.length>maxDescriptionLength? <>{description.substring(0, maxDescriptionLength)} <button onClick={() => openDialog('description')}>read more...</button></>  : description}</p>
+                {/* <span>{user}</span>
+                <span>{id}</span> */}
+                <p>{description.length>maxDescriptionLength?
+                 <>{description.substring(0, maxDescriptionLength)} 
+                <button className='readMoreLink' onClick={() => openDialog('description')}>read more...</button>
+                </>  : description}</p>
                 <img src={url}  className='image' alt='' onClick={() => openDialog('image')} />
             </article>
             {dialog ? <UseDialog >
                {element}
-                <button onClick={() => setDialog(false)}>close</button>
+                <button className='closeBtn' onClick={() => setDialog(false)}>Close</button>
             </UseDialog> : null}
         </>
     )
