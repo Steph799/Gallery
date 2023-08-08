@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import UseDialog from './UseDialog'
+import UseDialog from './shared/UseDialog'
 import '../styles/photo.scss'
 import { maxDescriptionLength } from '../common/constants'
+import { Button } from '@mui/material'
 
 export interface PhotoProps {
     title: string,
@@ -27,17 +28,21 @@ const openDialog = (element: 'image'| 'description')=>{
         setElement(<p>{description}</p>)
     }
 }
+
+const deletePhoto=(id:number)=>{
+
+}
+
     return (
         <>
             <article>
-                <h3 className='title'>{title}</h3>
-                {/* <span>{user}</span>
-                <span>{id}</span> */}
-                <p>{description.length>maxDescriptionLength?
+                <h2 className='title'>{title}</h2>
+                <p className='description'>{description.length>maxDescriptionLength?
                  <>{description.substring(0, maxDescriptionLength)} 
                 <button className='readMoreLink' onClick={() => openDialog('description')}>read more...</button>
                 </>  : description}</p>
                 <img src={url}  className='image' alt='' onClick={() => openDialog('image')} />
+                <Button color='error' variant='outlined' fullWidth size='small' onClick={()=>deletePhoto(id)}>Delete photo</Button>
             </article>
             {dialog ? <UseDialog >
                {element}

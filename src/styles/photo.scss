@@ -1,8 +1,9 @@
 .image {
-    width: 80px;
+    width:120px;
     height: auto;
     object-fit: cover; /* Maintain aspect ratio and cover the entire container */
     cursor: pointer;
+    padding: 2.5px;
 }
 .largeImg {
    width: 100%;
@@ -12,6 +13,7 @@
 .title {
     font-size: 20px;
     margin: 0;
+    height: 3rem;
 }
 .readMoreLink{
     background-color: transparent;
@@ -29,4 +31,10 @@
     position: absolute;
     top: 0;
     right: 0;
+    cursor: pointer;
+}
+
+.description{
+    margin: 8px 0;
+    height: 4.5rem;
 }
