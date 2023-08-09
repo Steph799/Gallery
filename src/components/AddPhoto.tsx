@@ -8,7 +8,6 @@ import FormLabel from '@mui/material/FormLabel';
 import '../styles/form.scss'
 
 const AddPhoto = () => {
-
     const titleRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLTextAreaElement>(null)
     const urlRef = useRef<HTMLInputElement>(null)
@@ -26,7 +25,7 @@ const AddPhoto = () => {
 
   
     const handleChoice = () => {
-        if (choice === 'file') return <input type='file' onChange={handleFileChange} accept="image/*" />
+        if (choice === 'file') return <input type='file' onChange={handleFileChange} className='fileInput' accept="image/*" />
         else if (choice === 'url') return <TextField size='small' inputRef={urlRef} type='text' placeholder='Enter URL' />
         return null
     }

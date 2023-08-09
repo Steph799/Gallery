@@ -1,19 +1,10 @@
 import React, { useState } from 'react'
 import UseDialog from './shared/UseDialog'
-import '../styles/photo.scss'
 import { maxDescriptionLength } from '../common/constants'
-import { Button } from '@mui/material'
+import { PhotoDataProps } from '../utils/interfaces'
+import '../styles/photo.scss'
 
-export interface PhotoProps {
-    title: string,
-    user: number,
-    id: number,
-    description: string,
-    url: string
-}
-
-
-const Photo = ({ title, user, id, description, url }: PhotoProps) => {
+const PhotoData = ({ title, user, id, description, url }: PhotoDataProps) => {
     const [dialog, setDialog] = useState(false)
     const [element, setElement] = useState<React.ReactNode>(null)
 
@@ -48,4 +39,4 @@ const Photo = ({ title, user, id, description, url }: PhotoProps) => {
     )
 }
 
-export default Photo
+export default PhotoData

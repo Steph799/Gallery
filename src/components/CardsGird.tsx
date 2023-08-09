@@ -1,27 +1,24 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
-import { Button, Card, CardContent, CardContentProps, Pagination, styled } from '@mui/material';
-import Photo, { PhotoProps } from './Photo';
+import { Alert, AlertTitle, Button, Card, CardContent, CardContentProps, DialogActions, Pagination, styled } from '@mui/material';
+import PhotoData from './PhotoData';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { defaultResultsNum } from '../common/constants';
+import UseDialog from './shared/UseDialog';
+import { countPhotos, fetchPhotos } from '../utils/services';
 
-interface DataProps {
-    photos: PhotoProps[]
-    limit: number
-    offset: number
-    success: boolean
-    message: string
-}
-
-const fetchPhotos = async (pageNumber: number) => {
-    const response = await axios.get<DataProps>(`https://api.slingacademy.com/v1/sample-data/photos?offset=${(pageNumber - 1) * defaultResultsNum}&limit=${defaultResultsNum}`)
-    return response.data
-}
 
 export default function CardsGrid() {
     const [pageNumber, setPageNumber] = useState(1)
+    const [alert, setAlert] = useState(false)
+
     const { isLoading, data, isError, error } = useQuery(['getPhotos', pageNumber], () => fetchPhotos(pageNumber), { keepPreviousData: true })
+    const { data: counter } = useQuery(['getTotalItems'], countPhotos)
+    const [totalItems, setTotalItems] = useState(counter || 0)
+
+    useEffect(() => {
+        if(counter) setTotalItems(counter)
+    }, [counter])
 
     if (isLoading) return <h2>Loading...</h2>
 
@@ -38,7 +35,11 @@ export default function CardsGrid() {
         setPageNumber(page)
     }
     const deletePhoto = (id: number) => {
+        setAlert(true)
+    }
 
+    const handleOk = () => {
+        setAlert(false)
     }
 
     return (
@@ -57,8 +58,8 @@ export default function CardsGrid() {
                                         flexDirection: 'column'
                                     }}
                                 ><CardContentImp  >
-                                        <Photo {...photo} />
-                                        <Button color='error' variant='outlined' fullWidth size='small' onClick={() => deletePhoto(photo.id)} className='deleteBtn'>
+                                        <PhotoData {...photo} />
+                                        <Button color='error' variant='outlined' fullWidth size='small' onClick={() => deletePhoto(photo.id)}>
                                             Delete photo
                                         </Button>
                                     </CardContentImp>
@@ -70,8 +71,19 @@ export default function CardsGrid() {
             </Grid> : <h2>No photos to display</h2>}
 
             <br />
-            <Pagination count={100} variant="outlined" shape="rounded" sx={{ display: 'inline-flex' }} onChange={handlePageChange} />
+            {totalItems ? <Pagination count={Math.ceil(totalItems / defaultResultsNum)} variant="outlined" shape="rounded" sx={{ display: 'inline-flex' }} onChange={handlePageChange} /> : null}
+            {alert ? <UseDialog no_padding >
+                <Alert severity="error" >
+                    <AlertTitle><b>Warning</b></AlertTitle>
+                    Are you sure you want to delete the card?
+                    <DialogActions>
+                        <Button autoFocus onClick={() => setAlert(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={handleOk}>Yes</Button>
+                    </DialogActions>
+                </Alert>
+            </UseDialog> : null}
         </>
-
     );
 }

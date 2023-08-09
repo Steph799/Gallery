@@ -4,21 +4,22 @@ import DialogContent from '@mui/material/DialogContent';
 
 type DialogProps = {
     children: React.ReactNode
+    no_padding?: boolean
 }
 
-const StyledDialogContent = styled(DialogContent)({
-    padding: '4px 4px 0 4px',
-    position:'relative'
-  });
+const StyledDialogContent = styled(DialogContent)<{ no_padding: boolean }>(props => ({
+    padding: props.no_padding ? 0 : '4px 4px 0 4px',
+    position: 'relative'
+}));
 
-function UseDialog({ children }: DialogProps) {
+function UseDialog({ children, no_padding=false }: DialogProps) {
     return (
         <Dialog
             aria-labelledby="responsive-dialog-title"
             open={true}
             maxWidth="xl"
         >
-            <StyledDialogContent >
+            <StyledDialogContent no_padding={no_padding}>
                 {children}
             </StyledDialogContent>
         </Dialog>
