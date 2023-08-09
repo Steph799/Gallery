@@ -2,6 +2,7 @@ import { Stack, Button } from '@mui/material'
 import React, { useState } from 'react'
 import UseDialog from './shared/UseDialog'
 import AddPhoto from './AddPhoto'
+import SetResults from './SetResults'
 
 const Options = () => {
     const [dialog, setDialog] = useState(false)
@@ -11,20 +12,19 @@ const Options = () => {
     const openDialog = (operation: 'add photo' | 'set number of results') => {
         setDialog(true)
 
-        // in this case I implemented only for image or description but it can be much more generic
         if (operation === 'add photo') {
                setElement(<AddPhoto/>)
         }
-        else {
-            // setElement(<p>{description}</p>)
-        }
+        // else {
+        //      setElement(<SetResults/>)
+        // }
     }
 
     return (
         <>
-         <Stack direction='row' justifyContent='space-evenly' marginBottom={3}>
+         <Stack direction='row' justifyContent='center' marginBottom={3}>
             <Button color='success' variant='contained' className='addBtn' onClick={()=>openDialog('add photo')} size='small'>+ Add photo</Button>
-            <Button color='info' variant='contained' className='setResultsBtn' onClick={()=>openDialog('set number of results')}>set number of results</Button>
+            {/* <Button color='info' variant='contained' className='setResultsBtn' onClick={()=>openDialog('set number of results')}>set number of results</Button> */}
         </Stack>
 
         {dialog ? <UseDialog >

@@ -11,3 +11,8 @@
     }
  
 }
+
+.setResultsForm{
+   @extend .form;
+   width: 250px;
+}

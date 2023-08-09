@@ -1,40 +1,48 @@
-.image {
-    width:120px;
-    height: auto;
-    object-fit: cover; /* Maintain aspect ratio and cover the entire container */
-    cursor: pointer;
-    padding: 2.5px;
-}
+
 .largeImg {
-   width: 100%;
+    width: 100%;
     height: auto;
     object-fit: cover; /* Maintain aspect ratio and cover the entire container */
 }
-.title {
-    font-size: 20px;
-    margin: 0;
-    height: 3rem;
-}
-.readMoreLink{
-    background-color: transparent;
-    color: #0000de;
-    border: none;
-    padding: 0 5px;
 
-    &:hover {
-        text-decoration: underline;
-        cursor: pointer;
-    }
+.detailedDescription{
+    max-width: 600px;
 }
 
-.closeBtn{
+.closeBtn {
     position: absolute;
     top: 0;
     right: 0;
     cursor: pointer;
 }
 
-.description{
-    margin: 8px 0;
-    height: 4.5rem;
+.cardItem{
+    height: 245px;
+    .description {
+        margin: 5px 0;
+        height: 4.5rem;
+    }
+    .title {
+        font-size: 18px;
+        margin: 0;
+        height: 4rem;
+    }
+    .readMoreLink {
+        background-color: transparent;
+        color: #0000de;
+        border: none;
+        padding: 0 5px;
+    
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+    .image {
+        width: 120px;
+        height: auto;
+        object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+        cursor: pointer;
+        padding: 2.5px;
+    }
 }
