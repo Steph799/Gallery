@@ -47,7 +47,7 @@ export default function CardsGrid() {
     if (isError) return <h2>{(error as Error).message}</h2>
 
     const CardContentImp = styled(CardContent)<CardContentProps>(() => ({
-        padding: 10,
+        padding: '5px 5px 0 5px',
         '&:last-child': {
             paddingBottom: '10px', // Add 10px of padding to the last child
         }
@@ -73,8 +73,8 @@ export default function CardsGrid() {
                             <Grid key={photo.id} item>
                                 <Card
                                     sx={{
-                                        height: 295,
-                                        width: 320,
+                                        height: 290.75,
+                                        width: 300,
                                         backgroundColor: '#F3F4F6',
                                         display: 'flex',
                                         flexDirection: 'column'
