@@ -3,9 +3,8 @@ export interface PhotoDataProps {
     user: number,
     id: number,
     description: string,
-    url: string
+    url: string 
 }
-
 
 export interface DataProps {
     photos: PhotoDataProps[]

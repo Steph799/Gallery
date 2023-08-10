@@ -12,8 +12,8 @@ const Options = () => {
             <Button color='success' variant='contained' className='addBtn' onClick={()=>setDialog(true)} size='small'>+ Add photo</Button>
         </Stack>
 
-        {dialog ? <UseDialog >
-            <AddPhoto/>
+        {dialog ? <UseDialog>
+            <AddPhoto setDialog={setDialog} />
                 <button className='closeBtn' onClick={() => setDialog(false)}>Close</button>
             </UseDialog> : null}
         </>

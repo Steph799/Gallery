@@ -7,19 +7,19 @@ type DialogProps = {
     no_padding?: boolean
 }
 
-const StyledDialogContent = styled(DialogContent)<{ no_padding: boolean }>(props => ({
+const StyledDialogContent = styled(DialogContent)<{ no_padding: string }>(props => ({
     padding: props.no_padding ? 0 : '4px 4px 0 4px',
     position: 'relative'
 }));
 
-function UseDialog({ children, no_padding=false }: DialogProps) {
+function UseDialog({ children, no_padding = false }: DialogProps) {
     return (
         <Dialog
             aria-labelledby="responsive-dialog-title"
             open={true}
             maxWidth="xl"
         >
-            <StyledDialogContent no_padding={no_padding}>
+            <StyledDialogContent no_padding={no_padding ? no_padding.toString() : ''}>
                 {children}
             </StyledDialogContent>
         </Dialog>

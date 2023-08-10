@@ -40,8 +40,7 @@
     }
     .image {
         width: 120px;
-        height: auto;
-        object-fit: cover; /* Maintain aspect ratio and cover the entire container */
+        max-height: 90px;
         cursor: pointer;
         padding: 2.5px;
     }

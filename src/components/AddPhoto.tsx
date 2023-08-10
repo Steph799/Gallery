@@ -5,17 +5,25 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { useQueryClient } from '@tanstack/react-query';
 import '../styles/form.scss'
 
-const AddPhoto = () => {
+
+interface AddPhotoProps {
+    setDialog: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const AddPhoto = ({ setDialog }: AddPhotoProps) => {
     const titleRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLTextAreaElement>(null)
     const urlRef = useRef<HTMLInputElement>(null)
-  
+
     const [choice, setChoice] = useState<string | null>(null);
     const [photoFile, setPhotoFile] = useState<File | null>(null);
     const [open, setOpen] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState('');
+
+    const queryClient = useQueryClient();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files && event.target.files[0];
@@ -23,36 +31,53 @@ const AddPhoto = () => {
         if (selectedFile) setPhotoFile(selectedFile);
     };
 
-  
     const handleChoice = () => {
         if (choice === 'file') return <input type='file' onChange={handleFileChange} className='fileInput' accept="image/*" />
         else if (choice === 'url') return <TextField size='small' inputRef={urlRef} type='text' placeholder='Enter URL' />
         return null
     }
 
-    const handleError=(e: React.FormEvent, messageError:string)=>{
+    const handleError = (e: React.FormEvent, messageError: string) => {
         e.preventDefault()
         setOpen(true);
         setErrorMsg(messageError)
     }
 
+    const addCard = (title: string, description: string, source: string | File) => {
+        const newCardObj = { title, description, url:source }
+        if (source instanceof File) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const base64DataUrl = event.target!.result;
+                newCardObj.url= base64DataUrl as string
+                queryClient.setQueryData(['newCard'], newCardObj);
+            };
+            reader.readAsDataURL(source);
+        } 
+        else queryClient.setQueryData(['newCard'], newCardObj)
+
+        setDialog(false)
+    }
+
     const handleSubmit = (e: React.FormEvent) => {
         if (!titleRef.current?.value || !descriptionRef.current?.value) {
-            handleError(e, 'Title and description must not be empty')    
+            handleError(e, 'Title and description must not be empty')
         } else if (!choice) {
             handleError(e, 'You must choose how to import the photo')
-        }
-        else if ((choice === 'file' && !photoFile) || (choice === 'url' && !urlRef.current?.value)){
+        } else if ((choice === 'file' && !photoFile) || (choice === 'url' && !urlRef.current?.value)) {
             handleError(e, 'You need to import the photo')
         }
 
-
+        else {
+            addCard(titleRef.current.value, descriptionRef.current.value, photoFile || urlRef.current!.value)
+            e.preventDefault()
+        }
     }
 
     return (
         <form onSubmit={handleSubmit} className='form'>
-            <TextField size='small' className='input' inputRef={titleRef} type='text' placeholder='Type your title' />
-            <textarea className='textArea' ref={descriptionRef} placeholder='Type your description' rows={4} />
+            <TextField size='small' className='input' inputRef={titleRef} type='text' placeholder='Type your title'/>
+            <textarea className='textArea' ref={descriptionRef} placeholder='Type your description' rows={4} maxLength={200}/>
             <FormControl>
                 <FormLabel>Choose to import data from file or URL</FormLabel>
                 <RadioGroup row>
@@ -66,7 +91,7 @@ const AddPhoto = () => {
             {open ? <Snackbar
                 open={open}
                 autoHideDuration={6000}
-                onClose={()=> setOpen(false)}
+                onClose={() => setOpen(false)}
             >
                 <Alert severity="error">Error: {errorMsg}</Alert>
             </Snackbar> : null}
