@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import Dialog from '@mui/material/Dialog';
+import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 
-type DialogProps = {
+type DialogFields = {
     children: React.ReactNode
     no_padding?: boolean
 }
@@ -12,17 +12,25 @@ const StyledDialogContent = styled(DialogContent)<{ no_padding: string }>(props 
     position: 'relative'
 }));
 
-function UseDialog({ children, no_padding = false }: DialogProps) {
+const StyledDialog = styled(Dialog)(() => ({
+    '& .MuiPaper-root': {
+        margin: 5
+    },
+}));
+
+
+function UseDialog({ children, no_padding = false }: DialogFields) {
     return (
-        <Dialog
+        <StyledDialog
             aria-labelledby="responsive-dialog-title"
             open={true}
             maxWidth="xl"
         >
+
             <StyledDialogContent no_padding={no_padding ? no_padding.toString() : ''}>
                 {children}
             </StyledDialogContent>
-        </Dialog>
+        </StyledDialog>
     )
 }
 
