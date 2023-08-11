@@ -32,7 +32,10 @@ const AddPhoto = ({ setDialog }: AddPhotoProps) => {
 
     const handleChoice = () => {
         if (choice === 'file') return <input type='file' onChange={handleFileChange} className='fileInput' accept="image/*" />
-        else if (choice === 'url') return <TextField size='small' inputRef={urlRef} type='text' placeholder='Enter URL' />
+        else if (choice === 'url') {
+            if (photoFile) setPhotoFile(null)
+            return <TextField size='small' inputRef={urlRef} type='text' placeholder='Enter URL' />
+        }
         return null
     }
 

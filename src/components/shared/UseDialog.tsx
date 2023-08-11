@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
+import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 
 type DialogFields = {
