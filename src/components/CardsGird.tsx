@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { Button, Card, CardContent, CardContentProps, Pagination, styled } from '@mui/material';
 import PhotoData from './PhotoData';
@@ -7,6 +7,13 @@ import { defaultResultsNum } from '../common/constants';
 import { countPhotos, fetchPhotos } from '../utils/services';
 import { PhotoDataProps } from '../utils/interfaces';
 import { CardContext } from './context/CardContext';
+
+const CardContentImp = styled(CardContent)<CardContentProps>(() => ({
+    padding: '5px 5px 0 5px',
+    '&:last-child': {
+        paddingBottom: '10px'
+    }
+}));
 
 const CardsGrid = () => {
     const { card: newObj } = useContext(CardContext)
@@ -18,7 +25,6 @@ const CardsGrid = () => {
     const { isLoading, data, isError, error } = useQuery(['getPhotos', pageNumber], () => fetchPhotos(pageNumber), { keepPreviousData: true })
     const { data: counter } = useQuery(['getTotalItems'], countPhotos, { keepPreviousData: true })
 
-
     useEffect(() => {
         if (data?.photos) setPhotos(data.photos)
     }, [data?.photos])
@@ -27,6 +33,7 @@ const CardsGrid = () => {
         if (counter && !totalItems) setTotalItems(counter)
     }, [counter])
 
+    //will be fired when adding a new card
     useEffect(() => {
         if (newObj.title && newObj.description && newObj.url) {
             const newCard = newObj as PhotoDataProps
@@ -39,30 +46,19 @@ const CardsGrid = () => {
         }
     }, [newObj])
 
-
-    if (isLoading) return <h2>Loading...</h2>
-
-    if (isError) return <h2>{(error as Error).message}</h2>
-
-    const CardContentImp = styled(CardContent)<CardContentProps>(() => ({
-        padding: '5px 5px 0 5px',
-        '&:last-child': {
-            paddingBottom: '10px'
-        }
-    }));
-
-    const handlePageChange = (event: ChangeEvent<unknown>, page: number) => {
-        setPageNumber(page)
-    }
     const deletePhoto = (id: number) => {
         const updatedArr = photos.filter(photo => photo.id !== id)
         setPhotos(updatedArr)
         setTotalItems(prev => prev - 1)
     }
 
+    if (isLoading) return <h2>Loading...</h2>
+
+    if (isError) return <h2>{(error as Error).message}</h2>
+
     return (
         <>
-            {photos?.length ? <Grid sx={{ flexGrow: 1 }} container spacing={2}>
+            {photos.length ? <Grid sx={{ flexGrow: 1 }} container spacing={2}>
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" spacing={2}>
                         {photos.map((photo) => (
@@ -89,7 +85,8 @@ const CardsGrid = () => {
             </Grid> : <h2>No photos to display</h2>}
 
             <br />
-            {totalItems ? <Pagination count={Math.ceil(totalItems / defaultResultsNum)} variant="outlined" shape="rounded" sx={{ display: 'inline-flex' }} onChange={handlePageChange} /> : null}
+            {totalItems ? <Pagination count={Math.ceil(totalItems / defaultResultsNum)} variant="outlined" shape="rounded" 
+            sx={{ display: 'inline-flex' }} onChange={(e,page)=> setPageNumber(page)} /> : null}
         </>
     );
 }

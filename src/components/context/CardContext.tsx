@@ -1,6 +1,5 @@
 import React, { createContext, useState } from 'react'
 
-
 export interface CardProps {
     title: string
     description: string

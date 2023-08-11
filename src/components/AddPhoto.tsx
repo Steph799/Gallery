@@ -24,7 +24,6 @@ const AddPhoto = ({ setDialog }: AddPhotoProps) => {
     const [open, setOpen] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
-
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files && event.target.files[0];
 
@@ -42,7 +41,6 @@ const AddPhoto = ({ setDialog }: AddPhotoProps) => {
         setErrorMsg(messageError)
     }
 
-
     const addCard = (title: string, description: string, source: string | File) => {
         const newCardObj = { title, description, url: source }
         if (source instanceof File) {
@@ -50,18 +48,22 @@ const AddPhoto = ({ setDialog }: AddPhotoProps) => {
             reader.onload = (event) => {
                 const base64DataUrl = event.target!.result;
                 newCardObj.url = base64DataUrl as string
-                setCard(newCardObj as CardProps)
+                setCard(newCardObj as CardProps) //safe cast because url now is a string
             };
             reader.readAsDataURL(source);
         }
+        //url is a string for sure
         else setCard(newCardObj as CardProps)
     }
+
     const handleSubmit = (e: React.FormEvent) => {
         if (!titleRef.current?.value || !descriptionRef.current?.value) {
             handleError('Title and description must not be empty')
-        } else if (!choice) {
+        }
+        else if (!choice) {
             handleError('You must choose how to import the photo')
-        } else if ((choice === 'file' && !photoFile) || (choice === 'url' && !urlRef.current?.value)) {
+        }
+        else if ((choice === 'file' && !photoFile) || (choice === 'url' && !urlRef.current?.value)) {
             handleError('You need to import the photo')
         }
 

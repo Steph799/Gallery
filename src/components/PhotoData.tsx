@@ -4,7 +4,7 @@ import { maxDescriptionLength } from '../common/constants'
 import { PhotoDataProps } from '../utils/interfaces'
 import '../styles/photo.scss'
 
-const PhotoData = ({ title, user, id, description, url }: PhotoDataProps) => {
+const PhotoData = ({ title, description, url }: PhotoDataProps) => {
     const [dialog, setDialog] = useState(false)
     const [element, setElement] = useState<React.ReactNode>(null)
 
@@ -30,6 +30,7 @@ const PhotoData = ({ title, user, id, description, url }: PhotoDataProps) => {
                     </> : description}</p>
                 <img src={url} loading='lazy' className='image' alt="missing item" onClick={() => openDialog('image')} />
             </article>
+
             {dialog ? <UseDialog >
                 {element}
                 <button className='closeBtn' onClick={() => setDialog(false)}>Close</button>
