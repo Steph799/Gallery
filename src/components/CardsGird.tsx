@@ -1,24 +1,23 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { Button, Card, CardContent, CardContentProps, Pagination, styled } from '@mui/material';
 import PhotoData from './PhotoData';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { defaultResultsNum } from '../common/constants';
 import { countPhotos, fetchPhotos } from '../utils/services';
 import { PhotoDataProps } from '../utils/interfaces';
+import { CardContext } from './context/CardContext';
 
+const CardsGrid = () => {
+    const { card: newObj } = useContext(CardContext)
 
-export default function CardsGrid() {
     const [pageNumber, setPageNumber] = useState(1)
+    const [totalItems, setTotalItems] = useState(0)
+    const [photos, setPhotos] = useState<PhotoDataProps[]>([])
+
     const { isLoading, data, isError, error } = useQuery(['getPhotos', pageNumber], () => fetchPhotos(pageNumber), { keepPreviousData: true })
     const { data: counter } = useQuery(['getTotalItems'], countPhotos, { keepPreviousData: true })
-    const { data: newObj } = useQuery(['newCard']);
 
-    const [totalItems, setTotalItems] = useState(counter || 0)
-    const [photos, setPhotos] = useState(data?.photos || [])
-
-
-    const queryClient = useQueryClient();
 
     useEffect(() => {
         if (data?.photos) setPhotos(data.photos)
@@ -29,15 +28,14 @@ export default function CardsGrid() {
     }, [counter])
 
     useEffect(() => {
-        if (newObj) {
+        if (newObj.title && newObj.description && newObj.url) {
             const newCard = newObj as PhotoDataProps
 
             newCard.id = totalItems + 1
             newCard.user = -1
 
             setPhotos(prev => [newCard, ...prev as PhotoDataProps[]])
-            setTotalItems(prev => prev + 1)
-            queryClient.removeQueries(['newCard'])
+            setTotalItems(prev => prev + 1)            
         }
     }, [newObj])
 
@@ -49,7 +47,7 @@ export default function CardsGrid() {
     const CardContentImp = styled(CardContent)<CardContentProps>(() => ({
         padding: '5px 5px 0 5px',
         '&:last-child': {
-            paddingBottom: '10px', // Add 10px of padding to the last child
+            paddingBottom: '10px'
         }
     }));
 
@@ -62,11 +60,9 @@ export default function CardsGrid() {
         setTotalItems(prev => prev - 1)
     }
 
-
-    console.log('check total items', totalItems);
     return (
         <>
-            {photos.length ? <Grid sx={{ flexGrow: 1 }} container spacing={2}>
+            {photos?.length ? <Grid sx={{ flexGrow: 1 }} container spacing={2}>
                 <Grid item xs={12}>
                     <Grid container justifyContent="center" spacing={2}>
                         {photos.map((photo) => (
@@ -97,3 +93,5 @@ export default function CardsGrid() {
         </>
     );
 }
+
+export default CardsGrid

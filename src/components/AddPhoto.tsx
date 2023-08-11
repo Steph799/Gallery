@@ -1,29 +1,29 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { Alert, Button, Snackbar, TextField } from '@mui/material';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { useQueryClient } from '@tanstack/react-query';
+import { CardContext, CardProps } from './context/CardContext';
 import '../styles/form.scss'
-
 
 interface AddPhotoProps {
     setDialog: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AddPhoto = ({ setDialog }: AddPhotoProps) => {
+    const { setCard } = useContext(CardContext)
+
     const titleRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLTextAreaElement>(null)
     const urlRef = useRef<HTMLInputElement>(null)
 
     const [choice, setChoice] = useState<string | null>(null);
     const [photoFile, setPhotoFile] = useState<File | null>(null);
-    const [open, setOpen] = React.useState(false);
-    const [errorMsg, setErrorMsg] = React.useState('');
+    const [open, setOpen] = useState(false);
+    const [errorMsg, setErrorMsg] = useState('');
 
-    const queryClient = useQueryClient();
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = event.target.files && event.target.files[0];
@@ -37,47 +37,45 @@ const AddPhoto = ({ setDialog }: AddPhotoProps) => {
         return null
     }
 
-    const handleError = (e: React.FormEvent, messageError: string) => {
-        e.preventDefault()
+    const handleError = (messageError: string) => {
         setOpen(true);
         setErrorMsg(messageError)
     }
 
+
     const addCard = (title: string, description: string, source: string | File) => {
-        const newCardObj = { title, description, url:source }
+        const newCardObj = { title, description, url: source }
         if (source instanceof File) {
             const reader = new FileReader();
             reader.onload = (event) => {
                 const base64DataUrl = event.target!.result;
-                newCardObj.url= base64DataUrl as string
-                queryClient.setQueryData(['newCard'], newCardObj);
+                newCardObj.url = base64DataUrl as string
+                setCard(newCardObj as CardProps)
             };
             reader.readAsDataURL(source);
-        } 
-        else queryClient.setQueryData(['newCard'], newCardObj)
-
-        setDialog(false)
+        }
+        else setCard(newCardObj as CardProps)
     }
-
     const handleSubmit = (e: React.FormEvent) => {
         if (!titleRef.current?.value || !descriptionRef.current?.value) {
-            handleError(e, 'Title and description must not be empty')
+            handleError('Title and description must not be empty')
         } else if (!choice) {
-            handleError(e, 'You must choose how to import the photo')
+            handleError('You must choose how to import the photo')
         } else if ((choice === 'file' && !photoFile) || (choice === 'url' && !urlRef.current?.value)) {
-            handleError(e, 'You need to import the photo')
+            handleError('You need to import the photo')
         }
 
         else {
             addCard(titleRef.current.value, descriptionRef.current.value, photoFile || urlRef.current!.value)
-            e.preventDefault()
+            setDialog(false)
         }
+        e.preventDefault()
     }
 
     return (
         <form onSubmit={handleSubmit} className='form'>
-            <TextField size='small' className='input' inputRef={titleRef} type='text' placeholder='Type your title'/>
-            <textarea className='textArea' ref={descriptionRef} placeholder='Type your description' rows={4} maxLength={200}/>
+            <TextField size='small' className='input' inputRef={titleRef} type='text' placeholder='Type your title' />
+            <textarea className='textArea' ref={descriptionRef} placeholder='Type your description' rows={4} maxLength={200} />
             <FormControl>
                 <FormLabel>Choose to import data from file or URL</FormLabel>
                 <RadioGroup row>

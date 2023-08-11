@@ -20,7 +20,6 @@ const PhotoData = ({ title, user, id, description, url }: PhotoDataProps) => {
         }
     }
 
-
     return (
         <>
             <article className='cardItem'>
