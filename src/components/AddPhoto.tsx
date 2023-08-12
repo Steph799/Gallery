@@ -7,6 +7,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { CardContext, CardProps } from './context/CardContext';
 import '../styles/form.scss'
+import { snackBarDuration } from '../common/constants';
 
 interface AddPhotoProps {
     setDialog: React.Dispatch<React.SetStateAction<boolean>>
@@ -32,10 +33,12 @@ const AddPhoto = ({ setDialog }: AddPhotoProps) => {
 
     const handleChoice = () => {
         if (choice === 'file') return <input type='file' onChange={handleFileChange} className='fileInput' accept="image/*" />
+
         else if (choice === 'url') {
             if (photoFile) setPhotoFile(null)
             return <TextField size='small' inputRef={urlRef} type='text' placeholder='Enter URL' />
         }
+
         return null
     }
 
@@ -93,7 +96,7 @@ const AddPhoto = ({ setDialog }: AddPhotoProps) => {
             <Button type='submit' variant='contained' color='info' fullWidth >Submit</Button>
             {open ? <Snackbar
                 open={open}
-                autoHideDuration={6000}
+                autoHideDuration={snackBarDuration}
                 onClose={() => setOpen(false)}
             >
                 <Alert severity="error">Error: {errorMsg}</Alert>

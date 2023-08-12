@@ -9,7 +9,7 @@ import { PhotoDataProps } from '../utils/interfaces';
 import { CardContext } from './context/CardContext';
 
 const CardContentImp = styled(CardContent)<CardContentProps>(() => ({
-    padding: '5px 5px 0 5px',
+    padding: '8px 8px 0 8px',
     '&:last-child': {
         paddingBottom: '10px'
     }
@@ -65,7 +65,7 @@ const CardsGrid = () => {
                             <Grid key={photo.id} item>
                                 <Card
                                     sx={{
-                                        height: 290.75,
+                                        height: 292,
                                         width: 300,
                                         backgroundColor: '#F3F4F6',
                                         display: 'flex',

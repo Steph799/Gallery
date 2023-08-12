@@ -1,12 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import UseDialog from './shared/UseDialog'
-import { maxDescriptionLength } from '../common/constants'
 import { PhotoDataProps } from '../utils/interfaces'
 import '../styles/photo.scss'
 
 const PhotoData = ({ title, description, url }: PhotoDataProps) => {
     const [dialog, setDialog] = useState(false)
     const [element, setElement] = useState<React.ReactNode>(null)
+    const [isEllipsisApplied, setIsEllipsisApplied] = useState(false);
+    const descriptionRef = useRef(null);
+
+    useEffect(() => {
+        if (descriptionRef.current) {
+            const descriptionElement = descriptionRef.current as HTMLParagraphElement;
+
+            //check exceeding in height due to high number of lines
+            const isEllipsisVisible = descriptionElement.scrollHeight > descriptionElement.clientHeight;
+            setIsEllipsisApplied(isEllipsisVisible);
+        }
+    }, []);
 
     const openDialog = (element: 'image' | 'description') => {
         setDialog(true)
@@ -24,10 +35,13 @@ const PhotoData = ({ title, description, url }: PhotoDataProps) => {
         <>
             <article className='cardItem'>
                 <h2 className='title'>{title}</h2>
-                <p className='description'>{description.length > maxDescriptionLength ?
-                    <>{description.substring(0, maxDescriptionLength)}
-                        <button className='readMoreLink' onClick={() => openDialog('description')}>read more...</button>
-                    </> : description}</p>
+
+                <section className='descriptionContainer'>
+                    <p className='description' ref={descriptionRef}>{description}</p>
+                    {isEllipsisApplied ? <button className='readMoreLink'
+                        onClick={() => openDialog('description')}>read more</button> : null}
+                </section>
+
                 <img src={url} loading='lazy' className='image' alt="missing item" onClick={() => openDialog('image')} />
             </article>
 
