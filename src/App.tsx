@@ -9,7 +9,7 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <div className="App">
-      <h1>welcome to my gallery</h1>
+      <h1>Welcome to my gallery</h1>
 
       <QueryClientProvider client={queryClient}>
         <CardContextProvider>

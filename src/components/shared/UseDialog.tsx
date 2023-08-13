@@ -26,7 +26,6 @@ function UseDialog({ children, no_padding = false }: DialogFields) {
             open={true}
             maxWidth="xl"
         >
-
             <StyledDialogContent no_padding={no_padding ? no_padding.toString() : ''}>
                 {children}
             </StyledDialogContent>
